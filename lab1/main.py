@@ -116,8 +116,8 @@ data3_x = np.load('data3_x.npy')
 data3_y = np.load('data3_y.npy')
 
 # Instantiation Ridge and Lasso classes 
-rr_control = Ridge(alpha=0.01)
-lr_control = Lasso(alpha=0.01)
+rr_control = Ridge(alpha=0)
+lr_control = Lasso(alpha=0)
 # Fitting the data 
 rr_control.fit(data3_x, data3_y)
 lr_control.fit(data3_x, data3_y)
@@ -127,8 +127,8 @@ alphas = np.linspace(0.001, 10, n_alphas)
 rr_coefs = []
 best_alpha = []
 for alpha in alphas:
-    rr = Ridge(alpha=alpha, fit_intercept=False)
-    lr = Lasso(alpha=alpha, fit_intercept=False)
+    rr = Ridge(alpha=alpha, fit_intercept=True)
+    lr = Lasso(alpha=alpha, fit_intercept=True)
     rr.fit(data3_x, data3_y)
     lr.fit(data3_x, data3_y)
     try:
@@ -140,13 +140,22 @@ for alpha in alphas:
         rr_coefs = rr.coef_
         lr_coefs = lr.coef_
 # Plotting figures
+rr_control_coefs = []
+lr_control_coefs = []
 for i in range(1000):
-    rr_control.coef_ = np.vstack((rr_control.coef_, rr_control.coef_))
-    lr_control.coef_ = np.vstack((lr_control.coef_, lr_control.coef_))
+    try:
+        rr_control_coefs = np.vstack((rr_control_coefs, rr_control.coef_))
+        lr_control_coefs = np.vstack((lr_control_coefs, lr_control.coef_))
+    except:
+        rr_control_coefs = rr_control.coef_
+        lr_control_coefs = lr_control.coef_
 
-print('\n Seeing shit!\n', np.shape(rr_control.coef_))
+print(np.shape(rr_control_coefs), np.shape(rr_coefs))
+
 plt.figure()
-## plt.plot(alphas, np.transpose(rr_control.coef_), label='[LS] feature 0')
+plt.plot(alphas, np.transpose(rr_control_coefs)[0], label='[LS] feature 0')
+plt.plot(alphas, np.transpose(rr_control_coefs)[1], label='[LS] feature 1')
+plt.plot(alphas, np.transpose(rr_control_coefs)[2], label='[LS] feature 2')
 plt.plot(alphas, np.transpose(rr_coefs)[0], label='feature 0')
 plt.plot(alphas, np.transpose(rr_coefs)[1],  label='feature 1')
 plt.plot(alphas, np.transpose(rr_coefs)[2],  label='feature 2')
@@ -159,6 +168,9 @@ plt.legend()
 plt.show()
 
 plt.figure()
+plt.plot(alphas, np.transpose(lr_control_coefs)[0], label='[LS] feature 0')
+plt.plot(alphas, np.transpose(lr_control_coefs)[1], label='[LS] feature 1')
+plt.plot(alphas, np.transpose(lr_control_coefs)[2], label='[LS] feature 2')
 plt.plot(alphas, np.transpose(lr_coefs)[0], label='feature 0')
 plt.plot(alphas, np.transpose(lr_coefs)[1],  label='feature 1')
 plt.plot(alphas, np.transpose(lr_coefs)[2],  label='feature 2')
@@ -166,6 +178,7 @@ plt.title('Lasso')
 plt.xscale('log')
 plt.grid(True)
 plt.xlabel(r'$\alpha$')
+plt.ylabel(r'$\beta$')
 plt.legend()
 plt.show()
 # PROF: Porque no lasso os 3 vão para zero?
@@ -173,27 +186,26 @@ plt.show()
 # We want an alpha that eliminates one featuew but does not eliminate the other features
 print('The best alpha is', best_alpha[0])
 # Doing the y_hat with respect to alpha
-lr = Lasso(alpha=0.071, fit_intercept=False)
+lr = Lasso(alpha=best_alpha[0], fit_intercept=True)
 lr.fit(data3_x, data3_y)
-ls = Lasso(alpha=0, fit_intercept=False)
+ls = Lasso(alpha=0, fit_intercept=True)
 ls.fit(data3_x, data3_y)
 y_hat_lr = lr.predict(data3_x)
-y_hat_ls = lr.predict(data3_x)
+y_hat_ls = ls.predict(data3_x)
 plt.figure()
 plt.plot(np.linspace(0, 50, 50), y_hat_lr, label='Lasso Prediction')
 plt.plot(np.linspace(0, 50, 50), y_hat_ls, label='Least Squares Prediction')
 plt.grid(True)
+plt.ylabel(r'$\hat y$')
+plt.xlabel(r'$x$')
 plt.legend()
 plt.show()
-plt.show()
+
 y_hat_lr = np.reshape(y_hat_lr, (50,1))
 y_hat_ls = np.reshape(y_hat_ls, (50,1))
 # Calculating the SSE
 sse_lr = np.linalg.norm(data3_y-y_hat_lr)
 sse_ls = np.linalg.norm(data3_y-y_hat_ls)
 print('\n The SSE for the Least Squares Prediction is:', sse_ls, '\n The SSE of the Lasso Prediction is:', sse_lr )
-print(y_hat_lr.shape, data3_y.shape)
 
-
-# TODO Ver a cena do ruido. Mandei mail à stora
 
