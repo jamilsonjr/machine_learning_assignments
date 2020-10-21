@@ -8,133 +8,177 @@ Created on Wed Jul 24 15:23:50 2019
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import warnings
+warnings.filterwarnings("error")
 
 
-###Quad1
-def quad1(x_o=-9.0,a=1.0,eta=0.1,threshold=0.01,maxiter=1000,anim=1):
-    it = 0
+# ###Quad1
+# def quad1(x_o=-9.0,a=1.0,eta=0.1,threshold=0.01,maxiter=1000,anim=1):
+#     it = 0
     
-    x1a = np.linspace(-10, 10, 20)
+#     x1a = np.linspace(-10, 10, 20)
     
-    y = (a*x1a**2)/2
+#     y = (a*x1a**2)/2
     
-    plt.clf()
-    plt.plot(x1a,y)
+#     plt.clf()
+#     plt.plot(x1a,y)
     
-    ###Gradient Method####
-    while it != maxiter:
-        fold = (a*(x_o**2))/2
-        grad = a*x_o
+#     ###Gradient Method####
+#     while it != maxiter:
+#         fold = (a*(x_o**2))/2
+#         grad = a*x_o
         
-        x_old = x_o
+#         x_old = x_o
         
-        x_o = x_o-eta*grad
+#         x_o = x_o-eta*grad
         
-        try:
-            f = (a*(x_o**2))/2 
+#         try:
+#             f = (a*(x_o**2))/2 
             
-            if (f < threshold or fold < threshold):  
+#             if (f < threshold or fold < threshold):  
                 
-                break
-            else:
-                f = (a*(x_o**2))/2 
-                if anim:
-                    plt.plot([x_old, x_o],[fold, f],'r.-')
-                    plt.pause(0.2)
-                it += 1
-        except:
-            print('Diverged')
-            break
+#                 break
+#             else:
+#                 f = (a*(x_o**2))/2 
+#                 if anim:
+#                     plt.plot([x_old, x_o],[fold, f],'r.-')
+#                     plt.pause(0.2)
+#                 it += 1
+#         except:
+#             print('Diverged')
+#             break
         
-    if it == maxiter:
-        #print('Did not converge in %d steps, f = %f' %(it+1,f))
-        plt.show()
-        return it+1
-    else:
-        #print('Converged in %d steps, f = %f' %(it+1,f))
-        plt.show()
-        return it+1
-    
-etha_list=[0.001,0.01,0.03,0.1,0.3,1,3]
-a_list=[0.5,1,2,5]
-for etha in etha_list:
-    for a in a_list:
-        
-        it=quad1(eta=etha, a=a, anim=0) 
-        print('etha=', etha, 'a=', a, 'it=', it)
-        
+#     if it == maxiter:
+#         print('Did not converge in %d steps, f = %f' %(it+1,f))
+#         plt.show()
+#         return x_o
+#     else:
+#         print('Converged in %d steps, f = %f' %(it+1,f))
+#         plt.show()
+#         return x_o
 
-print('****STARTING PART 1****')
-x_min = quad1(anim=1)
-print('The estimated value is %f' %(x_min))
+# # print('****STARTING PART 1****')
+# # x_min = quad1(anim=1)
+# # print('The estimated value is %f' %(x_min))
+ 
+# print('****STARTING PART 2****')
 
-print('****STARTING PART 2****')
-'''
 ###Quad2
-def quad2(x_o=[-9.0,9.0],a=2.0,eta=0.1,threshold=0.01,maxiter=1000,alpha=0,anim = 1):
-    it = 0
-    x1 = np.linspace(-10,10,21)
+# def quad2(x_o=[-9.0,9.0],a=2.0,eta=0.1,threshold=0.01,maxiter=1000,alpha=0,anim = 1):
+#     it = 0
+#     x1 = np.linspace(-10,10,21)
     
-    x2 = np.linspace(-10,10,21)
+#     x2 = np.linspace(-10,10,21)
     
-    [X,Y] = np.meshgrid(x1,x2)
+#     [X,Y] = np.meshgrid(x1,x2)
     
-    Y = (a*X**2+Y**2)/2
+#     Y = (a*X**2+Y**2)/2
     
-    plt.clf()
-    plt.contour(Y,10)
-    plt.xticks([0,5,10,15,20],[-10, -5, 0, 5, 10])
-    plt.yticks([0,5,10,15,20],[-10, -5, 0, 5, 10])
-    ax = plt.gca()
-    ax.set_aspect('equal','box')
+#     plt.clf()
+#     plt.contour(Y,10)
+#     plt.xticks([0,5,10,15,20],[-10, -5, 0, 5, 10])
+#     plt.yticks([0,5,10,15,20],[-10, -5, 0, 5, 10])
+#     ax = plt.gca()
+#     ax.set_aspect('equal','box')
     
-    plt.tight_layout()
+#     plt.tight_layout()
     
     
-    f = (a*x_o[0]**2+x_o[1]**2)/2
+#     f = (a*x_o[0]**2+x_o[1]**2)/2
     
-    varx = np.array([0,0])
-    ###Gradient Method####
-    while it != maxiter:
-        fold = f
+#     varx = np.array([0,0])
+#     ###Gradient Method####
+#     while it != maxiter:
+#         fold = f
         
-        grad = np.array([a*x_o[0], x_o[1]])
+#         grad = np.array([a*x_o[0], x_o[1]])
         
-        varx = alpha*varx+(1-alpha)*grad
-        x_old = np.asarray(x_o)
+#         varx = alpha*varx+(1-alpha)*grad
+#         x_old = np.asarray(x_o)
 
-        x_o = np.asarray(x_o-eta*varx)
+#         x_o = np.asarray(x_o-eta*varx)
     
-        try:
-            f = (a*x_o[0]**2+x_o[1]**2)/2
-            if (f < threshold or fold < threshold):
-                break
-            else:
-                if anim:
-                    plt.plot([x_old[0]+10, x_o[0]+10],[x_old[1]+10,x_o[1]+10],'r.-')
-                    plt.pause(0.2)                    
-                it += 1
-        except:
-            print('Diverged!')
-            plt.show()
-            break
+#         try:
+#             f = (a*x_o[0]**2+x_o[1]**2)/2
+#             if (f < threshold or fold < threshold):
+#                 break
+#             else:
+#                 if anim:
+#                     plt.plot([x_old[0]+10, x_o[0]+10],[x_old[1]+10,x_o[1]+10],'r.-')
+#                     plt.pause(0.2)                    
+#                 it += 1
+#         except RuntimeWarning:
+#             print('Diverged!')
+#             plt.show()
+#             break
         
-    if it == maxiter:
-        print('Did not converge in %d steps, f = %f' %(it,f))
-        plt.show()
-        return x_o
-    else:
-        print('Converged in %d steps, f = %f' %(it+1,f))
-        plt.show()
-        return x_o
+#     if it == maxiter:
+#         print('-> Did not converge in %d steps, f = %f' %(it,f))
+#         plt.show()
+#         return x_o
+#     else:
+#         print('-> Converged in %d steps, f = %f' %(it+1,f))
+#         plt.show()
+#         return x_o
     
 
-x_min = quad2(anim = 1)
-print('The estimated value is %s' %(x_min))
+# # x_min = quad2(anim = 1)
+# # print('The estimated value is %s' %(x_min))
+# alpha_array = [0, 0.5, 0.7, 0.9, 0.95]
+# eta_array = [0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10]
+# print('****STARTING PART 2 WITH MOMENTUM****')
+# for eta in eta_array:
+#     for alpha in alpha_array:
+#         print('The value of eta is: ', eta, 'The value of alpha is: ', alpha)
+#         x_min = quad2(a=20.0, eta=eta, anim = 0, alpha=alpha)
+#         print(' -> The estimated value is %s' %(x_min), '\n\n')
+#     print('==========================================')
 
-print('****STARTING PART 2 WITH MOMENTUM****')
-x_min = quad2(a=20.0,eta=1,anim = 1,alpha=0.9)
-print('The estimated value is %s' %(x_min))
+# print(' **** Checking for other divergence threshold ****')
+# print('\nAROUND 0.1\n')
+# eta_array = np.linspace(0.03, 0.1, 7)
+# for eta in eta_array:
+#     print('The value of eta is: ', eta)
+#     x_min = quad2(a=20.0, eta=eta, anim = 0, alpha=0)
+#     print(' -> The estimated value is %s' %(x_min), '\n\n')
+#     print('-----------------------------------')
+
+# print('==========================================')
+# print('\nAROUND 0.3\n')
+# eta_array = np.linspace(0.1, 0.3, 20)
+# for eta in eta_array:
+#     print('The value of eta is: ', eta)
+#     x_min = quad2(a=20.0, eta=eta, anim = 0, alpha=0.5)
+#     print(' -> The estimated value is %s' %(x_min), '\n\n')
+#     print('-----------------------------------')
+
+# print('==========================================')
+# print('\nAROUND 1\n')
+# eta_array = np.linspace(0.3, 1, 7)
+# for eta in eta_array:
+#     print('The value of eta is: ', eta)
+#     x_min = quad2(a=20.0, eta=eta, anim = 0, alpha=0.7)
+#     print(' -> The estimated value is %s' %(x_min), '\n\n')
+#     print('-----------------------------------')
+
+# print('==========================================')
+# print('\nAROUND 3\n')
+# eta_array = np.linspace(1, 3, 20)
+# for eta in eta_array:
+#     print('The value of eta is: ', eta)
+#     x_min = quad2(a=20.0, eta=eta, anim = 0, alpha=0.9)
+#     print(' -> The estimated value is %s' %(x_min), '\n\n')
+#     print('-----------------------------------')
+
+# print('==========================================')
+# print('\nAROUND 10\n')
+# eta_array = np.linspace(3, 10, 7)
+# for eta in eta_array:
+#     print('The value of eta is: ', eta)
+#     x_min = quad2(a=20.0, eta=eta, anim = 0, alpha=0.95)
+#     print(' -> The estimated value is %s' %(x_min), '\n\n')
+#     print('-----------------------------------')
+
 
 def rosen(x_o=[-1.5,1.0],a=20.0,eta=0.001,threshold=0.001,maxiter=1000,alpha=0.0,anim = 1,up = 1,down = 1,reduce = 1):
     it = 0
@@ -250,6 +294,116 @@ def rosen(x_o=[-1.5,1.0],a=20.0,eta=0.001,threshold=0.001,maxiter=1000,alpha=0.0
         return x_o
     
 print('****STARTING Rosenbrock****')
-x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=0.001,threshold=.001,maxiter=1000,alpha=0,anim = 1,up = 1,down = 1,reduce = 1)
+# Discovering the best value for alpha and eta
+# first increase eta
+eta_array = np.linspace(0.000, 0.1, 10)
+for eta in eta_array:
+    x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=eta,threshold=.001,maxiter=1000,alpha=0,anim = 0,up = 1,down = 1,reduce = 1)
+    print('The estimated value is %s' %(x_min))
+    print('ETA = ', eta)
+    print('--------------------------')
+print('==========================================')
+# then alpha, with eta  = 0.012
+alpha_array = np.linspace(0, 1, 20)
+best_eta = 0.011
+for alpha in alpha_array:
+    x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=best_eta,threshold=.001,maxiter=1000,alpha=alpha,anim = 0,up = 1,down = 1,reduce = 1)
+    print('The estimated value is %s' %(x_min))
+    print('ALPHA = ', alpha)
+    print('--------------------------')
+# Conclusion:  eta=0.012 alpha=0.95
+print('**** TO FILL THE TABLE ****')
+
+print('eta -10%')
+x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=best_eta*0.9,threshold=.001,maxiter=1000,alpha=0.95,anim = 0,up = 1,down = 1,reduce = 1)
 print('The estimated value is %s' %(x_min))
-'''
+print('--------------------------')
+
+print('eta -20%')
+x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=best_eta*0.8,threshold=.001,maxiter=1000,alpha=0.95,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+
+print('eta BEST')
+x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=best_eta,threshold=.001,maxiter=1000,alpha=0.95,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+
+print('eta +10%')
+x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=best_eta*1.1,threshold=.001,maxiter=1000,alpha=0.95,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+
+print('eta +20%')
+x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=best_eta*1.2,threshold=.001,maxiter=1000,alpha=0.95,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+
+# Using fixed step size
+print('==========================================')
+print(' **** USING ADAPTIVE STEP SIZE ****')
+alpha_array = [0, 0.5, 0.7, 0.9, 0.95, 0.99]
+eta_array = [0.001, 0.01, 0.1, 1, 10]
+for eta in eta_array:
+    for alpha in alpha_array:
+        print('For ETA = ', eta, 'and ALPHA = ', alpha)
+        x_min = rosen(x_o=[-1.5,1.0],a=20.0,eta=eta,threshold=.001,maxiter=1000,alpha=alpha,anim = 0,up = 1.1,down = 0.9,reduce = 0.5)
+        print('The estimated value is %s' %(x_min))
+    print('--------------------------')
+
+# Using fixed step size and a = 100 
+print('==========================================')
+print(' **** USING FIXED STEP SIZE ****')
+alpha_array = [0, 0.5, 0.7, 0.9, 0.95, 0.99]
+eta_array = [0.001, 0.01, 0.1, 1, 10]
+for eta in eta_array:
+    for alpha in alpha_array:
+        print('For ETA = ', eta, 'and ALPHA = ', alpha)
+        x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=eta,threshold=.001,maxiter=1000,alpha=alpha,anim = 0,up = 1,down = 1,reduce = 1)
+        print('The estimated value is %s' %(x_min))
+    print('--------------------------')
+best_eta = 0.01
+best_alpha = 0.99
+
+print('==========================================')
+print(' **** USING FIXED STEP SIZE VARIATION ****')
+print('==========================================')
+print(' **** USING FIXED STEP SIZE VARIATION ****')
+print('For ETA +10%' )
+x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=best_eta*1.1,threshold=.001,maxiter=1000,alpha=0.99,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+print('For ETA best')
+x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=best_eta,threshold=.001,maxiter=1000,alpha=best_alpha,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+print('For ETA -10% ')
+x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=best_eta*0.9,threshold=.001,maxiter=1000,alpha=0.99,anim = 0,up = 1,down = 1,reduce = 1)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+
+print('==========================================')
+print(' **** USING ADAPTATIVE STEP SIZE ****')
+alpha = best_alpha # Using the last best one 
+eta_array = [0.001, 0.01, 0.1, 1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+for eta in eta_array:
+    print('For ETA = ', eta, 'and ALPHA = ', alpha)
+    x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=eta,threshold=.001,maxiter=1000,alpha=alpha,anim = 0,up = 1.1,down = 0.9,reduce = 0.5)
+    print('The estimated value is %s' %(x_min))
+print('--------------------------')
+best_eta = 40
+print('==========================================')
+print(' **** USING ADAPTATIVE STEP SIZE VARIATION ****')
+print('For ETA +10% ')
+x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=best_eta*1.1,threshold=.001,maxiter=1000,alpha=0.99,anim = 0,up = 1.1,down = 0.9,reduce = 0.5)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+print('For ETA best ')
+x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=best_eta,threshold=.001,maxiter=1000,alpha=0.99,anim = 0,up = 1.1,down = 0.9,reduce = 0.5)
+print('The estimated value is %s' %(x_min))
+print('--------------------------')
+print('For ETA -10% ')
+x_min = rosen(x_o=[-1.5,1.0],a=100.0,eta=best_eta*0.9,threshold=.001,maxiter=1000,alpha=0.99,anim = 0,up = 1.1,down = 0.9,reduce = 0.5)
+print('The estimated value is %s' %(x_min))
+
+
